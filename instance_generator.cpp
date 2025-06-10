@@ -6,39 +6,42 @@
 
 using namespace std;
 
-int default_knapsack(int W, const vector<int>& wt, const vector<int>& val, int n){
-  int knapsack_matrix[n + 1][W + 1];
+int default_knapsack(int W, const vector<int>& wt, const vector<int>& val, int n) {
+  // Aloca a matriz na heap com valores inicializados em 0
+  vector<vector<int>> knapsack_matrix(n + 1, vector<int>(W + 1, 0));
   int value_above, instant_value, desloc;
 
-  //first line is 0
-  std::fill(knapsack_matrix[0], knapsack_matrix[0] + W + 1, 0);
-
-  //start loop
-  for(int i = 1; i <= n; i++){
-    for(int j = 0; j <= W; j++){
-      value_above =  knapsack_matrix[i - 1][j];
+  // Loop principal de programação dinâmica
+  for (int i = 1; i <= n; i++) {
+    for (int j = 0; j <= W; j++) {
+      value_above = knapsack_matrix[i - 1][j];
       desloc = j - wt[i - 1]; 
-      if (desloc >= 0){
+      if (desloc >= 0) {
         instant_value = val[i - 1] + knapsack_matrix[i - 1][desloc];
         knapsack_matrix[i][j] = std::max(instant_value, value_above);
-      }else{
+      } else {
         knapsack_matrix[i][j] = value_above;
       }
     }
   }
-  //get last entry
+
+  // Retorna o valor ótimo da mochila
   return knapsack_matrix[n][W];
 }
 
 void parse_args(int argc, char* argv[], 
   int& n, int& W, pair<int,int>& v_range, 
-  pair<int,int>& w_range, bool& normal_mode) {
+  pair<int,int>& w_range, bool& normal_mode,
+  bool& binary_mode, bool& forth_mode
+) {
   // Set default values
   n = 20;
   W = 100;
   v_range = {1, 50};
   w_range = {1, 20};
   normal_mode = false;
+  binary_mode = false;
+  forth_mode = false;
 
   // Parse command line arguments
   for (int i = 1; i < argc; i++) {
@@ -55,6 +58,10 @@ void parse_args(int argc, char* argv[],
       w_range.second = stoi(argv[++i]);
     } else if (arg == "--normal-mode") {
       normal_mode = true;
+    } else if (arg == "--binary-mode"){
+      binary_mode = true;
+    } else if (arg == "--forth-mode"){
+      forth_mode = true;
     }
   }
 }
@@ -65,6 +72,7 @@ void parse_args(int argc, char* argv[],
 // -v v0 vn, [int,int], range for values in normal distribution
 // -w w0 wn , [int,int], range for weights in normal distribution
 // --normal-mode, values goes to 1 ~ n, weights set in 1
+// --heavy-mode
 
 //DEFAULT VALUES:
 // n = 20
@@ -80,10 +88,10 @@ int main(int argc, char* argv[]) {
   //params
   int n, W;
   pair<int, int> v_range, w_range;
-  bool normal_mode;
+  bool normal_mode, binary_mode, forth_mode;
   
   //parser
-  parse_args(argc, argv, n, W, v_range, w_range, normal_mode);
+  parse_args(argc, argv, n, W, v_range, w_range, normal_mode, binary_mode, forth_mode);
 
   vector<int> values(n);
   vector<int> weights(n);
@@ -92,6 +100,30 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < n; i++) {
       values[i] = i + 1;
       weights[i] = 1;
+    }
+    W = n/4;
+  } else if (binary_mode){
+    for (int i = 0; i < n; i++) {
+      weights[i] = 1;
+      if ( i % 2 == 0){
+        values[i] =  100;
+        
+      }else{
+        values[i] = 1;
+      }
+
+    }
+  }else if (forth_mode){
+    W = n/4;
+    for (int i = 0; i < n; i++) {
+      weights[i] = 1;
+      if ( i % 4 == 0){
+        values[i] =  100;
+        
+      }else{
+        values[i] = 1;
+      }
+
     }
   } else {
     // Random values and weights within specified ranges
