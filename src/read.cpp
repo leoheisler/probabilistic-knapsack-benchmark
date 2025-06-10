@@ -1,6 +1,6 @@
 #include "Read.h"
 
-void read_knapsack_instance(std::istream& cin,int& n, int& capacity, int&max_weight,int*& weights, int*& values){
+void read_knapsack_instance(std::istream& cin,int& n, int& capacity, int&max_weight,int*& weights, int*& values, int& opt){
   std::string line  = "", dummy;
   std::stringstream linestr;
   max_weight = INT_MIN;
@@ -35,5 +35,11 @@ void read_knapsack_instance(std::istream& cin,int& n, int& capacity, int&max_wei
     }
     i++;
   }
+  linestr.clear();
+
+  //read_opt
+  getline(cin, line);
+  linestr.str(line);
+  linestr >> opt;
   linestr.clear();
 }
