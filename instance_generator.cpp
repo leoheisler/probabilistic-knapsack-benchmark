@@ -103,6 +103,7 @@ int main(int argc, char* argv[]) {
     }
     W = n/4;
   } else if (binary_mode){
+    W=n/2;
     for (int i = 0; i < n; i++) {
       weights[i] = 1;
       if ( i % 2 == 0){
