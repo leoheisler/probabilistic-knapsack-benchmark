@@ -74,6 +74,74 @@ for ((i = 1; i <= 100; i++)); do
   start_W=$((start_W - jump_W))
 done
 
+# SMALL INSTANCES
+mkdir -p "knapsack_instances/eficiency/var_N(small)"
+mkdir -p "knapsack_instances/eficiency/var_W(small)"
+mkdir -p "knapsack_instances/eficiency/var_Wmax(small)"
+
+##############################
+# Variação no número de itens
+##############################
+
+echo "Creating 100 normal_dist instances varying N..."
+
+instance_prefix="knapsack_instances/eficiency/var_N(small)/"
+fixed_W=200
+fixed_wmax=5
+start_n=2
+jump_n=2
+
+for ((i = 1; i <= 100; i++)); do
+  instance_name="${instance_prefix}${start_n}.txt"
+  echo "Creating instance: N=${start_n}"
+
+  ./build/generator -W "$fixed_W" -w 0 "$fixed_wmax" -n "$start_n" > "$instance_name"
+
+  start_n=$((start_n + jump_n))
+done
+
+##############################
+# Variação no peso máximo dos itens
+##############################
+
+echo "Creating 100 normal_dist instances varying wmax..."
+
+instance_prefix="knapsack_instances/eficiency/var_Wmax(small)/"
+fixed_W=200
+fixed_n=100
+start_wmax=2
+jump_wmax=2
+
+for ((i = 1; i <= 100; i++)); do
+  instance_name="${instance_prefix}${start_wmax}.txt"
+  echo "Creating instance: wmax=${start_wmax}"
+
+  ./build/generator -W "$fixed_W" -w 0 "$start_wmax" -n "$fixed_n" > "$instance_name"
+
+  start_wmax=$((start_wmax + jump_wmax))
+done
+
+##############################
+# Variação na capacidade da mochila
+##############################
+
+echo "Creating 100 normal_dist instances varying W..."
+
+instance_prefix="knapsack_instances/eficiency/var_W(small)/"
+start_W=2
+fixed_n=100
+fixed_wmax=5
+jump_W=2
+
+for ((i = 1; i <= 100; i++)); do
+  instance_name="${instance_prefix}${start_W}.txt"
+  echo "Creating instance: W=${start_W}"
+
+  ./build/generator -W "$start_W" -w 0 "$fixed_wmax" -n "$fixed_n" > "$instance_name"
+
+  start_W=$((start_W + jump_W))
+done
+
 ######################################################################
 # probability instances
 ######################################################################

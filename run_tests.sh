@@ -6,8 +6,8 @@ run_eficency_tests() {
   local default_csv="$folder/default.csv"
   local probability_csv="$folder/probability.csv"
   
-  echo "ITEM_NUM, MAX_W, W, TABLE_INSERTS, DURATION, OPT" > "$default_csv"
-  echo "ITEM_NUM, MAX_W, W, TABLE_INSERTS, DURATION, OPT" > "$probability_csv"
+  echo "ITEM_NUM,MAX_W,W,TABLE_INSERTS,DURATION,OPT" > "$default_csv"
+  echo "ITEM_NUM,MAX_W,W,TABLE_INSERTS,DURATION,OPT" > "$probability_csv"
   
   for arquivo in "./knapsack_instances/eficiency/$variant"/*; do
     ./build/knapsack "$default_csv" 1 < "$arquivo"
@@ -19,6 +19,10 @@ run_eficency_tests var_N
 run_eficency_tests var_W
 run_eficency_tests var_Wmax
 
+run_eficency_tests "var_N(small)"
+run_eficency_tests "var_W(small)"
+run_eficency_tests "var_Wmax(small)"
+
 run_probability_tests() {
   local variant=$1
   local folder="results/success_prob/"
@@ -26,7 +30,7 @@ run_probability_tests() {
   
   local probability_csv="$folder/$variant.csv"
 
-  echo "ITEM_NUM, MAX_W, W, TABLE_INSERTS, DURATION, OPT" > "$probability_csv"
+  echo "ITEM_NUM,MAX_W,W,TABLE_INSERTS,DURATION,OPT" > "$probability_csv"
   
   for arquivo in "./knapsack_instances/success_prob/$variant"/*; do
     ./build/knapsack "$probability_csv" 0 < "$arquivo"
